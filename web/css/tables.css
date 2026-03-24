@@ -1,0 +1,57 @@
+table.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+table.result-table th {
+  text-align: left;
+  color: var(--text-dim);
+  font-weight: 500;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+table.result-table td {
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid #1e1e1e;
+  color: var(--text);
+}
+
+table.result-table tr:hover td { background: var(--surface2); }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.calendar-grid .day-header {
+  background: var(--surface2);
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.calendar-grid .day-cell {
+  background: var(--bg);
+  text-align: center;
+  padding: 0.6rem 0.3rem;
+  font-size: 0.85rem;
+  min-height: 2.5rem;
+}
+
+.calendar-grid .day-cell.empty { background: var(--surface); }
+.calendar-grid .day-cell.today { color: var(--accent); font-weight: 600; }
+.calendar-grid .day-cell.sunday { color: var(--accent3); }

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astro Tools — heyman.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/tabs.css">
+<link rel="stylesheet" href="css/forms.css">
+<link rel="stylesheet" href="css/tables.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Astro Tools</h1>
+    <p>Historical astronomical computation tools from Sky &amp; Telescope</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="sunrise">Sunrise/Sunset</button>
+    <button class="tab-btn" data-tab="moon">Moon Phases</button>
+    <button class="tab-btn" data-tab="calendar">Calendar</button>
+    <button class="tab-btn" data-tab="holidays">Holidays</button>
+    <button class="tab-btn" data-tab="meteors">Meteor Showers</button>
+    <button class="tab-btn" data-tab="julian">Julian Date</button>
+    <button class="tab-btn" data-tab="sidereal">Sidereal Time</button>
+  </div>
+
+  <!-- Tab 1: Sunrise/Sunset -->
+  <div class="panel active" id="panel-sunrise">
+    <div class="panel-inner">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Latitude</label>
+          <input type="number" id="ss-lat" step="0.0001" value="40.7128">
+        </div>
+        <div class="form-group">
+          <label>Longitude</label>
+          <input type="number" id="ss-lon" step="0.0001" value="-74.0060">
+        </div>
+        <div class="form-group">
+          <label>TZ Offset</label>
+          <input type="number" id="ss-tz" step="0.5" value="-5">
+        </div>
+        <button class="secondary" onclick="useMyLocation()">Use My Location</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="ss-year">
+        </div>
+        <div class="form-group">
+          <label>Month</label>
+          <input type="number" id="ss-month" min="1" max="12">
+        </div>
+        <div class="form-group">
+          <label>Day</label>
+          <input type="number" id="ss-day" min="1" max="31">
+        </div>
+        <button onclick="calcSunrise()">Calculate</button>
+      </div>
+      <div class="output" id="out-sunrise"></div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Moon Phases -->
+  <div class="panel" id="panel-moon">
+    <div class="panel-inner">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="mp-year">
+        </div>
+        <div class="form-group">
+          <label>Month (optional)</label>
+          <input type="number" id="mp-month" min="0" max="12" placeholder="0=all">
+        </div>
+        <button onclick="calcMoonPhases()">Calculate</button>
+      </div>
+      <div class="output" id="out-moon"></div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Calendar -->
+  <div class="panel" id="panel-calendar">
+    <div class="panel-inner">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Month</label>
+          <input type="number" id="cal-month" min="1" max="12">
+        </div>
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="cal-year">
+        </div>
+        <button onclick="calcCalendar()">Calculate</button>
+      </div>
+      <div class="output" id="out-calendar"></div>
+    </div>
+  </div>
+
+  <!-- Tab 4: Holidays -->
+  <div class="panel" id="panel-holidays">
+    <div class="panel-inner">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="hol-year">
+        </div>
+        <button onclick="calcHolidays()">Calculate</button>
+      </div>
+      <div class="output" id="out-holidays"></div>
+    </div>
+  </div>
+
+  <!-- Tab 5: Meteor Showers -->
+  <div class="panel" id="panel-meteors">
+    <div class="panel-inner">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="met-year">
+        </div>
+        <button onclick="calcMeteors()">Calculate</button>
+      </div>
+      <div class="output" id="out-meteors"></div>
+    </div>
+  </div>
+
+  <!-- Tab 6: Julian Date -->
+  <div class="panel" id="panel-julian">
+    <div class="panel-inner">
+      <div class="mode-toggle">
+        <button class="active" onclick="setJDMode('toJD', this)">Calendar &rarr; JD</button>
+        <button onclick="setJDMode('fromJD', this)">JD &rarr; Calendar</button>
+      </div>
+      <div id="jd-toJD">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Year</label>
+            <input type="number" id="jd-year">
+          </div>
+          <div class="form-group">
+            <label>Month</label>
+            <input type="number" id="jd-month" min="1" max="12">
+          </div>
+          <div class="form-group">
+            <label>Day</label>
+            <input type="number" id="jd-day" min="1" max="31" step="0.000001">
+          </div>
+          <button onclick="calcJDFromCal()">Calculate</button>
+        </div>
+      </div>
+      <div id="jd-fromJD" style="display:none">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Julian Day</label>
+            <input type="number" id="jd-input" step="0.00001" style="width:180px" value="2460000.5">
+          </div>
+          <button onclick="calcCalFromJD()">Calculate</button>
+        </div>
+      </div>
+      <div class="output" id="out-julian"></div>
+    </div>
+  </div>
+
+  <!-- Tab 7: Sidereal Time -->
+  <div class="panel" id="panel-sidereal">
+    <div class="panel-inner">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Julian Day</label>
+          <input type="number" id="st-jd" step="0.00001" style="width:180px">
+        </div>
+        <button onclick="calcSidereal()">Calculate</button>
+        <button class="secondary" onclick="fillCurrentJD()">Use Now</button>
+      </div>
+      <div class="output" id="out-sidereal"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/sunrise.js"></script>
+<script src="js/moon-phases.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/holidays.js"></script>
+<script src="js/meteor-showers.js"></script>
+<script src="js/julian-date.js"></script>
+<script src="js/sidereal.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
